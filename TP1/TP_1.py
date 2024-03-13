@@ -23,7 +23,7 @@ def analise_de_ficheiro(arquivo):
             dados = f.read()
         # imagem = Image.open(arquivo)
         # Process the BMP image data here
-    elif arquivo.endswith('.c') or arquivo.endswith('.java') or arquivo.endswith('.htm'):
+    elif arquivo.endswith('.c') or arquivo.endswith('.java') or arquivo.endswith('.htm')or arquivo.endswith('.kt'):
         with open(arquivo, 'r') as f:
             dados = f.read()
     else:
@@ -32,6 +32,7 @@ def analise_de_ficheiro(arquivo):
         return
 
     contagem = Counter(dados)
+
     total = sum(contagem.values())
 
     # Informação própria
@@ -41,7 +42,7 @@ def analise_de_ficheiro(arquivo):
     for k, v in own_info.items():
         print(f"{k}: {v:.4f}")
 
-    entropia = sum(-freq/total * math.log2(freq/total) for freq in contagem.values())
+    entropia = -sum(freq/total * math.log2(freq/total) for freq in contagem.values())
 
     # Plot do histograma
     contagem = sorted(contagem.items())
@@ -50,7 +51,7 @@ def analise_de_ficheiro(arquivo):
     
     plt.bar(simbolos, frequencias)
     plt.title(arquivo)
-    print(f"\nEntropia: {entropia:.4f}")
+    print(f"\nEntropia: {entropia:.4f} bit/symbol")
     plt.show()
 
 
@@ -66,7 +67,7 @@ def anlise_de_ficheiros(folder_name):
     
            
         analise_de_ficheiro(folder_name+"/"+file_name)
-      
+        
         
     
 
