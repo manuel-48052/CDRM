@@ -63,10 +63,10 @@ def printSymbolsOverThreshold(file, thresholdToPrint):
 
 
 def main():
-   arithm_prog(1, 2, 10) #ok
-   print(calc_factorial(5)) #ok
-   print(calc_min_common_multiple(3, 13)) #ok
-   print(prime_in_range(10, 20)) #ok
-   printSymbolsOverThreshold('lab01.txt', 9) 
+   arithm_prog(1, 2, 10) 
+   print(calc_factorial(5)) 
+   print(calc_min_common_multiple(8, 4)) 
+   print(prime_in_range(10, 20)) 
+   printSymbolsOverThreshold('lab01.txt', 10) 
 
 main()
