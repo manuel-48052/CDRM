@@ -9,10 +9,44 @@ símbolos mais frequentes.
 Comente os resultados obtidos"""
 
 import os
+
+def get_histograma(file):
+    data = file
+    count_dict = {}
+    for i in data:
+        if i in count_dict:
+            count_dict[i] += 1
+        else:
+            count_dict[i] = 1
+    return count_dict
+
 def analise_de_ficheiro(file):
+    histo = get_histograma(file)
+    print(histo)
+    
+
+import chardet
+# Function to detect file encoding
+def detect_encoding(file_path):
+    with open(file_path, 'rb') as f:
+        raw_data = f.read()
+        result = chardet.detect(raw_data)
+        return result['encoding']
+
+# Detect encoding and open file
+
 
 def anlise_de_ficheiros(folder_name):
     list_files = os.listdir(folder_name)
     print(list_files)
+    for file_name in list_files:
+        print("------")
+        print(file_name)
+        file_encoding = detect_encoding(folder_name+"/"+file_name)
+       # with open(folder_name+"/"+file_name, 'r',encoding=file_encoding) as file:
+        with open(folder_name+"/"+file_name, 'rb') as file:
+            file= file.read()
+        analise_de_ficheiro(file)
     
 
+anlise_de_ficheiros("TestFilesCD")
