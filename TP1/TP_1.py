@@ -9,29 +9,50 @@ símbolos mais frequentes.
 Comente os resultados obtidos"""
 
 import os
+import math
+from collections import Counter
+import matplotlib.pyplot as plt
 
-def get_histograma(file):
-    data = file
-    count_dict = {}
-    for i in data:
-        if i in count_dict:
-            count_dict[i] += 1
-        else:
-            count_dict[i] = 1
-    return count_dict
+def analise_de_ficheiro(arquivo):
+    if arquivo.endswith('.txt'):
+        with open(arquivo, 'r') as f:
+            dados = f.read()
+        # Process the text data here
+    elif arquivo.endswith('.bmp'):
+        with open(arquivo, 'rb') as f:
+            dados = f.read()
+        # imagem = Image.open(arquivo)
+        # Process the BMP image data here
+    elif arquivo.endswith('.c') or arquivo.endswith('.java') or arquivo.endswith('.htm'):
+        with open(arquivo, 'r') as f:
+            dados = f.read()
+    else:
+        print("Formato de arquivo não suportado.")
+        print(arquivo)
+        return
 
-def analise_de_ficheiro(file):
-    histo = get_histograma(file)
-    print(histo)
+    contagem = Counter(dados)
+    total = sum(contagem.values())
+
+    # Informação própria
+    own_info = {k: -math.log2(v/total) for k, v in contagem.items()}
+
+    print("Informação própria:")
+    for k, v in own_info.items():
+        print(f"{k}: {v:.4f}")
+
+    entropia = sum(-freq/total * math.log2(freq/total) for freq in contagem.values())
+
+    # Plot do histograma
+    contagem = sorted(contagem.items())
+    simbolos, frequencias = zip(*contagem)
+    # probabilidade = [freq/total for freq in frequencias]
     
+    plt.bar(simbolos, frequencias)
+    plt.title(arquivo)
+    print(f"\nEntropia: {entropia:.4f}")
+    plt.show()
 
-import chardet
-# Function to detect file encoding
-def detect_encoding(file_path):
-    with open(file_path, 'rb') as f:
-        raw_data = f.read()
-        result = chardet.detect(raw_data)
-        return result['encoding']
 
 # Detect encoding and open file
 
@@ -42,11 +63,11 @@ def anlise_de_ficheiros(folder_name):
     for file_name in list_files:
         print("------")
         print(file_name)
-        file_encoding = detect_encoding(folder_name+"/"+file_name)
-       # with open(folder_name+"/"+file_name, 'r',encoding=file_encoding) as file:
-        with open(folder_name+"/"+file_name, 'rb') as file:
-            file= file.read()
-        analise_de_ficheiro(file)
+    
+           
+        analise_de_ficheiro(folder_name+"/"+file_name)
+      
+        
     
 
 anlise_de_ficheiros("TestFilesCD")
