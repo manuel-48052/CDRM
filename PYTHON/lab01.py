@@ -30,8 +30,8 @@ def prime_in_range(left, right):
                 if (num % i) == 0:
                     break
             else:
-                return num
-
+                print(num)
+    return
 
 def printSymbolsOverThreshold(file, thresholdToPrint):
     """
@@ -47,22 +47,26 @@ def printSymbolsOverThreshold(file, thresholdToPrint):
     with open(file, 'r') as file:
         data = file.read().replace('\n', '')
         count_dict = {}
+        numLetters = 0
         for i in data:
+            numLetters+=1
             if i in count_dict:
                 count_dict[i] += 1
             else:
                 count_dict[i] = 1
+
         for symbol, count in count_dict.items():
-            if count > thresholdToPrint:
-                print(symbol)
+            percentage = (count/numLetters)*100
+            if  percentage > thresholdToPrint:
+                print(symbol + " " + str(percentage) +"%")
 
 
 
 def main():
-   arithm_prog(1, 2, 10)
-   print(calc_factorial(5))
-   print(calc_min_common_multiple(5, 7)) #confirm
-   # print(prime_in_range(10, 20)) #confirm
+   arithm_prog(1, 2, 10) 
+   print(calc_factorial(5)) 
+   print(calc_min_common_multiple(8, 4)) 
+   print(prime_in_range(10, 20)) 
    printSymbolsOverThreshold('lab01.txt', 10) 
 
 main()
