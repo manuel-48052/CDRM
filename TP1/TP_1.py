@@ -13,7 +13,7 @@ import math
 from collections import Counter
 import matplotlib.pyplot as plt
 
-def analise_de_ficheiro(arquivo):
+def file_read_simbols(arquivo):
     if arquivo.endswith('.txt'):
         with open(arquivo, 'r') as f:
             dados = f.read()
@@ -30,6 +30,10 @@ def analise_de_ficheiro(arquivo):
         print("Formato de arquivo não suportado.")
         print(arquivo)
         return
+    return dados
+
+def analise_de_ficheiro(arquivo):
+    dados = file_read_simbols(arquivo)
 
     contagem = Counter(dados)
 
@@ -71,4 +75,25 @@ def anlise_de_ficheiros(folder_name):
         
     
 
-anlise_de_ficheiros("TestFilesCD")
+#anlise_de_ficheiros("TestFilesCD")
+
+def percentagem_de_ocorrência_de_cada_símbol(arquivo,top=5):
+    dados = file_read_simbols(arquivo)
+
+    contagem = Counter(dados)
+
+    total = sum(contagem.values())
+   # own_info = {k: -math.log2(v/total) for k, v in contagem.items()} 
+    percentag = {k: round(((v/total)*100),2) for k, v in contagem.items()} 
+    sorted_percentag = sorted(percentag.items(), key=lambda x:x[1],reverse=True)
+    print(sorted_percentag)
+    
+
+
+
+folder_name = "TestFilesCD"
+file_name = "abbccc.txt"
+percentagem_de_ocorrência_de_cada_símbol(folder_name+"/"+file_name)
+
+def pares_de_simblos(arquivo):
+    dados = file_read_simbols(arquivo)
