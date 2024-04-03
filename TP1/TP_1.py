@@ -92,11 +92,10 @@ def percentagem_de_ocorrência_de_cada_símbol(arquivo,top=5):
 
 
 
-folder_name = "TestFilesCD"
-file_name = "abbccc.txt"
 
 
-#percentagem_de_ocorrência_de_cada_símbol(folder_name+"/"+file_name)
+
+#
 #percentagem_de_ocorrência_de_cada_símbol("ListaPalavrasPT.txt")
 
 
@@ -111,3 +110,26 @@ pares_de_simblos("ListaPalavrasPT.txt")
 
 #4
 #implementação de fontes de símbolos
+
+if __name__ == "__main__":
+    while True:
+        # Exibe um menu de opções para o usuário
+        print("Escolha uma opção:")
+        print("""3a :  Para todos os ficheiros do conjunto TestFilesCD.zip, apresente: o valor da informação própria de cada símbolo; o
+valor da entropia; o histograma. Comente os resultados obtidos.""")
+        print("3b.  Uma estimativa da percentagem de ocorrência de cada símbolo (carater). Indique os cinco símbolos mais frequentes.")
+        
+
+        
+        # Recebe a entrada do usuário
+        opcao = input("Digite o número da opção desejada: ")
+        if opcao == "3a":
+            folder_name = "TestFilesCD"
+            file_name = "abbccc.txt"
+            percentagem_de_ocorrência_de_cada_símbol(folder_name+"/"+file_name)
+
+        elif opcao == "3b":
+            print("top 5 ListaPalavrasPT")
+            percentagem_de_ocorrência_de_cada_símbol("ListaPalavrasPT.txt")
+            print("top 5 ListaPalavrasEN")
+            percentagem_de_ocorrência_de_cada_símbol("ListaPalavrasEN.txt")
