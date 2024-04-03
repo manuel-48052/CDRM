@@ -86,14 +86,28 @@ def percentagem_de_ocorrência_de_cada_símbol(arquivo,top=5):
    # own_info = {k: -math.log2(v/total) for k, v in contagem.items()} 
     percentag = {k: round(((v/total)*100),2) for k, v in contagem.items()} 
     sorted_percentag = sorted(percentag.items(), key=lambda x:x[1],reverse=True)
-    print(sorted_percentag)
+    for i in range(top):
+        print(sorted_percentag[i])
     
 
 
 
 folder_name = "TestFilesCD"
 file_name = "abbccc.txt"
-percentagem_de_ocorrência_de_cada_símbol(folder_name+"/"+file_name)
+
+
+#percentagem_de_ocorrência_de_cada_símbol(folder_name+"/"+file_name)
+#percentagem_de_ocorrência_de_cada_símbol("ListaPalavrasPT.txt")
+
 
 def pares_de_simblos(arquivo):
-    dados = file_read_simbols(arquivo)
+    dados = file_read_simbols(arquivo)        
+    pares = [dados[i:i+2] for i in range(len(dados)-1)]
+    frequencia = Counter(pares)
+    print(frequencia.most_common(5))
+    return frequencia.most_common(5)
+
+pares_de_simblos("ListaPalavrasPT.txt")
+
+#4
+#implementação de fontes de símbolos
