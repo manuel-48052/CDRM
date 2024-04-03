@@ -1,0 +1,15 @@
+1000 bit
+10 erros
+
+BER = (10/1000) erros/bit
+
+'U'
+'abbccc'
+
+
+                0,1
+bsc(input_bit, prob)         gerador ({0,1}, prob)
+
+
+
+fun str to bits
