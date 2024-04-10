@@ -12,6 +12,7 @@ import os
 import math
 from collections import Counter
 import matplotlib.pyplot as plt
+import secrets
 
 def file_read_simbols(arquivo):
     if arquivo.endswith('.txt'):
@@ -19,6 +20,9 @@ def file_read_simbols(arquivo):
             dados = f.read()
         # Process the text data here
     elif arquivo.endswith('.bmp'):
+        with open(arquivo, 'rb') as f:
+            dados = f.read()
+    elif arquivo.endswith('.gif'):
         with open(arquivo, 'rb') as f:
             dados = f.read()
         # imagem = Image.open(arquivo)
@@ -110,26 +114,73 @@ pares_de_simblos("ListaPalavrasPT.txt")
 
 #4
 #implementação de fontes de símbolos
+def vernam_cipher(plaintext, key):
+    ciphertext = ''
+    for i in range(len(plaintext)):
+        char = chr(ord(plaintext[i]) ^ ord(key[i]))
+        ciphertext += char
+    return ciphertext
+
+def vernam_decrypt(ciphertext, key):
+    decrypted_text = ''
+    for i in range(len(ciphertext)):
+        char = chr(ord(ciphertext[i]) ^ ord(key[i]))
+        decrypted_text += char
+    return decrypted_text
+
+def generate_random_key(length):
+    return ''.join(secrets.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789') for i in range(length))
+
+# def generate_sequence(N, probabilities):
+#     """
+#     Função que gera uma sequência de N símbolos de acordo com as probabilidades
+#     definidas na FMP.
+#     """
+#     symbols = []
+#     for i in range(N):
+#         symbol = np.random.choice(len(probabilities), p=probabilities)
+#         symbols.append(symbol)
+#     return symbols
+
+
+def ex_5():
+    arquivo = "Grayscale Images/bird.gif"
+    dados = file_read_simbols(arquivo)
+    key = generate_random_key(len(dados))
+
+
+
+    ciphertext = vernam_cipher(dados, key)
+    print("Texto cifrado:", ciphertext)
+
+    decrypt_choice = input("Deseja decifrar o texto cifrado? (s/n): ").lower()
+    if decrypt_choice == 's':
+        decrypted_text = vernam_decrypt(ciphertext, key)
+        print("Texto decifrado:", decrypted_text)
+
 
 if __name__ == "__main__":
-    while True:
-        # Exibe um menu de opções para o usuário
-        print("Escolha uma opção:")
-        print("""3a :  Para todos os ficheiros do conjunto TestFilesCD.zip, apresente: o valor da informação própria de cada símbolo; o
+    # Exibe um menu de opções para o usuário
+    print("Escolha uma opção:")
+    print("""3a :  Para todos os ficheiros do conjunto TestFilesCD.zip, apresente: o valor da informação própria de cada símbolo; o
 valor da entropia; o histograma. Comente os resultados obtidos.""")
-        print("3b.  Uma estimativa da percentagem de ocorrência de cada símbolo (carater). Indique os cinco símbolos mais frequentes.")
-        
+    print("3b.  Uma estimativa da percentagem de ocorrência de cada símbolo (carater). Indique os cinco símbolos mais frequentes.")
+    
 
-        
-        # Recebe a entrada do usuário
-        opcao = input("Digite o número da opção desejada: ")
-        if opcao == "3a":
-            folder_name = "TestFilesCD"
-            file_name = "abbccc.txt"
-            percentagem_de_ocorrência_de_cada_símbol(folder_name+"/"+file_name)
+    
+    # Recebe a entrada do usuário
+    #opcao = input("Digite o número da opção desejada: ")
+    opcao = "5"
+    if opcao == "3a":
+        folder_name = "TestFilesCD"
+        file_name = "abbccc.txt"
+        percentagem_de_ocorrência_de_cada_símbol(folder_name+"/"+file_name)
 
-        elif opcao == "3b":
-            print("top 5 ListaPalavrasPT")
-            percentagem_de_ocorrência_de_cada_símbol("ListaPalavrasPT.txt")
-            print("top 5 ListaPalavrasEN")
-            percentagem_de_ocorrência_de_cada_símbol("ListaPalavrasEN.txt")
+    elif opcao == "3b":
+        print("top 5 ListaPalavrasPT")
+        percentagem_de_ocorrência_de_cada_símbol("ListaPalavrasPT.txt")
+        print("top 5 ListaPalavrasEN")
+        percentagem_de_ocorrência_de_cada_símbol("ListaPalavrasEN.txt")
+    elif opcao == "5":
+        print("ex 5")
+        ex_5()
