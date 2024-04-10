@@ -13,6 +13,7 @@ import math
 from collections import Counter
 import matplotlib.pyplot as plt
 import secrets
+import random
 
 def file_read_simbols(arquivo):
     if arquivo.endswith('.txt'):
@@ -143,6 +144,7 @@ def generate_random_key(length):
 #     return symbols
 
 
+
 def ex_5():
     arquivo = "Grayscale Images/bird.gif"
     dados = file_read_simbols(arquivo)
@@ -158,6 +160,68 @@ def ex_5():
         decrypted_text = vernam_decrypt(ciphertext, key)
         print("Texto decifrado:", decrypted_text)
 
+def bsc_str(input: str, p: float) -> str:
+    transit: list[str] = [c for c in input]
+    for i in range(len(transit)):
+        if random.random() < p:
+            transit[i] = "0" if input[i] == "1" else "1"
+    return transit
+
+def bsc_ints(seq, p):
+    output_s = ""
+    for leter in seq:
+        leter_bin = format(leter, 'b').rjust(8, '0')      
+        bits = []
+        for bit in leter_bin:
+            # Extract the i-th bit using bitwise operations
+           # bit = (leter_bin >> i) & 1
+            if random.random() < p:
+                bits.append(int(bit) ^ 1)
+            else:
+                bits.append(int(bit))
+
+        bit_str = ''.join(str(bit) for bit in bits)
+        output_int = int(bit_str, 2)
+        output_s += chr(output_int)
+
+    return output_s
+
+def ber(seq1, seq2):
+    def tobits(s):
+        result = []
+        for c in s:
+            bits = bin(ord(c))[2:]
+            bits = '00000000'[len(bits):] + bits
+            result.extend([int(b) for b in bits])
+        return result
+    
+    a = tobits(seq1)
+    b = tobits(seq2)
+
+    diff_bits = 0
+
+    for i in range(len(a)):
+        diff_bits += a[i] ^ b[i]
+    print("diferent bits")
+    print(diff_bits)
+    return diff_bits / len(a)
+
+
+def ex_6():
+    print("ex 6")
+    with open("TestFilesCD/a.txt", 'r') as file:                
+        alice = file.read()
+        length = len(alice)      
+        the_key_random = generate_random_key(length)
+        
+        #chave constante
+        cipherText = vernam_cipher(alice, the_key_random)
+        print(cipherText)
+        output_bits = bsc_str(cipherText, 0.1)
+        print(output_bits)
+        plain_text = vernam_cipher(output_bits, the_key_random) 
+        print(f"BER: {ber(alice,plain_text)}")
+
 
 if __name__ == "__main__":
     # Exibe um menu de opções para o usuário
@@ -170,7 +234,7 @@ valor da entropia; o histograma. Comente os resultados obtidos.""")
     
     # Recebe a entrada do usuário
     #opcao = input("Digite o número da opção desejada: ")
-    opcao = "5"
+    opcao = "6"
     if opcao == "3a":
         folder_name = "TestFilesCD"
         file_name = "abbccc.txt"
@@ -184,3 +248,6 @@ valor da entropia; o histograma. Comente os resultados obtidos.""")
     elif opcao == "5":
         print("ex 5")
         ex_5()
+    elif opcao == "6":
+        print("ex 6")
+        ex_6()
