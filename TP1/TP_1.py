@@ -34,12 +34,13 @@ def file_read_simbols(arquivo):
     else:
         print("Formato de arquivo não suportado.")
         print(arquivo)
-        return
+        return None
     return dados
 
 def analise_de_ficheiro(arquivo):
     dados = file_read_simbols(arquivo)
-
+    if dados == None:
+        return
     contagem = Counter(dados)
 
     total = sum(contagem.values())
@@ -73,8 +74,6 @@ def anlise_de_ficheiros(folder_name):
     for file_name in list_files:
         print("------")
         print(file_name)
-    
-           
         analise_de_ficheiro(folder_name+"/"+file_name)
         
         
@@ -91,17 +90,13 @@ def percentagem_de_ocorrência_de_cada_símbol(arquivo,top=5):
    # own_info = {k: -math.log2(v/total) for k, v in contagem.items()} 
     percentag = {k: round(((v/total)*100),2) for k, v in contagem.items()} 
     sorted_percentag = sorted(percentag.items(), key=lambda x:x[1],reverse=True)
-    for i in range(top):
-        print(sorted_percentag[i])
-    
+    if (len(sorted_percentag)>top):
+        for i in range(top):
+            print(sorted_percentag[i])
+    else:
+        for i in range(len(sorted_percentag)):
+            print(sorted_percentag[i])
 
-
-
-
-
-
-#
-#percentagem_de_ocorrência_de_cada_símbol("ListaPalavrasPT.txt")
 
 
 def pares_de_simblos(arquivo):
@@ -111,7 +106,7 @@ def pares_de_simblos(arquivo):
     print(frequencia.most_common(5))
     return frequencia.most_common(5)
 
-pares_de_simblos("ListaPalavrasPT.txt")
+
 
 #
 #implementação de fontes de símbolos
@@ -164,18 +159,19 @@ def bsc(seq, p):
 
 def ex_5():
     arquivo = "Grayscale Images/bird.gif"
-    dados = file_read_simbols(arquivo)
-    key = generate_random_key(len(dados))
+    with open(arquivo, 'rb') as f:
+        dados = f.read()
+    print(dados[0])
+
+    from PIL import Image
+    import io
+    image = Image.open(io.BytesIO(dados))
+    image.show()
+     
+    
 
 
-
-    ciphertext = vernam_cipher(dados, key)
-    print("Texto cifrado:", ciphertext)
-
-    decrypt_choice = input("Deseja decifrar o texto cifrado? (s/n): ").lower()
-    if decrypt_choice == 's':
-        decrypted_text = vernam_decrypt(ciphertext, key)
-        print("Texto decifrado:", decrypted_text)
+    
 
 def bsc_str(input: str, p: float) -> str:
     transit: list[str] = [c for c in input]
@@ -226,6 +222,7 @@ def ber(seq1, seq2):
 
 def ex_6():
     print("ex 6")
+
    # with open("TestFilesCD/a.txt", 'r') as file: 
     arquivo = "TestFilesCD/a.txt"
     dados = file_read_simbols(arquivo)
@@ -244,20 +241,14 @@ def ex_6():
 if __name__ == "__main__":
     # Exibe um menu de opções para o usuário
     print("Escolha uma opção:")
-    print("""3a :  Para todos os ficheiros do conjunto TestFilesCD.zip, apresente: o valor da informação própria de cada símbolo; o
-valor da entropia; o histograma. Comente os resultados obtidos.""")
-    print("3b.  Uma estimativa da percentagem de ocorrência de cada símbolo (carater). Indique os cinco símbolos mais frequentes.")
-    
 
     
     # Recebe a entrada do usuário
-    #opcao = input("Digite o número da opção desejada: ")
-    opcao = "6"
+    opcao = input("Digite o número da opção desejada: ")
     if opcao == "3a":
         folder_name = "TestFilesCD"
         file_name = "abbccc.txt"
-        percentagem_de_ocorrência_de_cada_símbol(folder_name+"/"+file_name)
-
+        anlise_de_ficheiros(folder_name)
     elif opcao == "3b":
         print("top 5 ListaPalavrasPT")
         percentagem_de_ocorrência_de_cada_símbol("ListaPalavrasPT.txt")
