@@ -113,7 +113,7 @@ def pares_de_simblos(arquivo):
 
 pares_de_simblos("ListaPalavrasPT.txt")
 
-#4
+#
 #implementação de fontes de símbolos
 def vernam_cipher(plaintext, key):
     ciphertext = ''
@@ -143,7 +143,24 @@ def generate_random_key(length):
 #         symbols.append(symbol)
 #     return symbols
 
+def bsc(seq, p):
+    output_s = ""
+    for leter in seq:
+        leter_bin = format(ord(leter), 'b').rjust(8, '0')    
+        bits = []
+        for bit in leter_bin:
+            # Extract the i-th bit using bitwise operations
+           # bit = (leter_bin >> i) & 1
+            if random.random() < p:
+                bits.append(int(bit) ^ 1)
+            else:
+                bits.append(int(bit))
 
+        bit_str = ''.join(str(bit) for bit in bits)
+        output_int = int(bit_str, 2)
+        output_s += chr(output_int)
+
+    return output_s
 
 def ex_5():
     arquivo = "Grayscale Images/bird.gif"
@@ -209,18 +226,19 @@ def ber(seq1, seq2):
 
 def ex_6():
     print("ex 6")
-    with open("TestFilesCD/a.txt", 'r') as file:                
-        alice = file.read()
-        length = len(alice)      
-        the_key_random = generate_random_key(length)
-        
-        #chave constante
-        cipherText = vernam_cipher(alice, the_key_random)
-        print(cipherText)
-        output_bits = bsc_str(cipherText, 0.1)
-        print(output_bits)
-        plain_text = vernam_cipher(output_bits, the_key_random) 
-        print(f"BER: {ber(alice,plain_text)}")
+   # with open("TestFilesCD/a.txt", 'r') as file: 
+    arquivo = "TestFilesCD/a.txt"
+    dados = file_read_simbols(arquivo)
+    length = len(dados)      
+    the_key_random = generate_random_key(length)
+    
+    #chave constante
+    
+    print(dados)
+    output_bits = bsc(dados, 0.1)
+    print(output_bits)
+    
+    print(f"BER: {ber(dados,output_bits)}")
 
 
 if __name__ == "__main__":
