@@ -157,21 +157,25 @@ def bsc(seq, p):
 
     return output_s
 
+import random
+from PIL import Image
+import numpy as np
+
+
 def ex_5():
     arquivo = "Grayscale Images/bird.gif"
-    with open(arquivo, 'rb') as f:
-        dados = f.read()
-    print(dados[0])
-
-    from PIL import Image
-    import io
-    image = Image.open(io.BytesIO(dados))
-    image.show()
-     
+    img = Image.open(arquivo)
+    numpydata = np.asarray(img)
+   
+    key = np.random.randint(255, size=numpydata.shape)
     
+    codified_image = np.bitwise_xor(numpydata, key)
+    decodified_image = np.bitwise_xor(codified_image, key)
 
 
-    
+  #  imgb = Image.fromarray( np.asarray( np.clip(new,0,255), dtype="uint8"), "L" )
+  #  imgb.show()
+
 
 def bsc_str(input: str, p: float) -> str:
     transit: list[str] = [c for c in input]
