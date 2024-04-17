@@ -164,17 +164,25 @@ import numpy as np
 
 def ex_5():
     arquivo = "Grayscale Images/bird.gif"
+    x1=50
+    x2=100
+    y1=50
+    y2=200
     img = Image.open(arquivo)
-    numpydata = np.asarray(img)
-   
-    key = np.random.randint(255, size=numpydata.shape)
-    
-    codified_image = np.bitwise_xor(numpydata, key)
-    decodified_image = np.bitwise_xor(codified_image, key)
+    numpydata = np.asarray(img)  
+    key_random = np.random.randint(255, size=(x2-x1,y2-y1))
+    key_zeros = np.zeros(numpydata.shape,dtype=np.uint8)
+
+    key_zeros[x1:x2,y1:y2] = key_random
+    codified_region = np.bitwise_xor(numpydata, key_zeros)
+
+ 
 
 
-  #  imgb = Image.fromarray( np.asarray( np.clip(new,0,255), dtype="uint8"), "L" )
-  #  imgb.show()
+    imgb = Image.fromarray( np.asarray( np.clip(codified_region,0,255), dtype="uint8"), "L" )
+    imgb.show()
+
+      #decodified_image = np.bitwise_xor(codified_region, keycle)
 
 
 def bsc_str(input: str, p: float) -> str:
@@ -231,7 +239,7 @@ def ex_6():
     arquivo = "TestFilesCD/a.txt"
     dados = file_read_simbols(arquivo)
     length = len(dados)      
-    the_key_random = generate_random_key(length)
+    #the_key_random = generate_random_key(length)
     
     #chave constante
     
@@ -264,3 +272,4 @@ if __name__ == "__main__":
     elif opcao == "6":
         print("ex 6")
         ex_6()
+
