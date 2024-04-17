@@ -162,7 +162,7 @@ from PIL import Image
 import numpy as np
 
 
-def ex_5(arquivo):
+def ex_5(arquivo,total = False):
     x1=50
     x2=200
     y1=50
@@ -170,9 +170,15 @@ def ex_5(arquivo):
     img = Image.open(arquivo)
     numpydata = np.asarray(img)  
     type_of_imga = "L"
+    if total:
+        x1=0
+        x2=numpydata.shape[0]
+        y1=0
+        y2=numpydata.shape[1]
     if len(numpydata.shape) == 3:
         key_random = np.random.randint(255, size=(x2-x1,y2-y1,3))
         type_of_imga = "RGB"
+        print("RGB")
     else:
         key_random = np.random.randint(255, size=(x2-x1,y2-y1))
     key_zeros = np.zeros(numpydata.shape,dtype=np.uint8)
@@ -273,12 +279,19 @@ if __name__ == "__main__":
         percentagem_de_ocorrência_de_cada_símbol("ListaPalavrasEN.txt")
     elif opcao == "5":
         print("ex 5")
+<<<<<<< HEAD
         #arquivo = "Grayscale Images/bird.gif"
         #ex_5(arquivo)
         #arquivo = "Color Images/barries.tif"
         #ex_5(arquivo)
         arquivo = "Grayscale Images/Lena.jpg"
         ex_5(arquivo)
+=======
+        arquivo = "Grayscale Images/lena.jpg"
+        ex_5(arquivo)
+        arquivo = "Color Images/barries.tif"
+        ex_5(arquivo,True)
+>>>>>>> e300cdbf953a75f5675aa0d943484d9e4edba531
     elif opcao == "6":
         print("ex 6")
         ex_6()
