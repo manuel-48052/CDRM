@@ -273,9 +273,11 @@ if __name__ == "__main__":
         percentagem_de_ocorrência_de_cada_símbol("ListaPalavrasEN.txt")
     elif opcao == "5":
         print("ex 5")
-        arquivo = "Grayscale Images/bird.gif"
-        ex_5(arquivo)
-        arquivo = "Color Images/barries.tif"
+        #arquivo = "Grayscale Images/bird.gif"
+        #ex_5(arquivo)
+        #arquivo = "Color Images/barries.tif"
+        #ex_5(arquivo)
+        arquivo = "Grayscale Images/Lena.jpg"
         ex_5(arquivo)
     elif opcao == "6":
         print("ex 6")
