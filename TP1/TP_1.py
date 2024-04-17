@@ -162,27 +162,32 @@ from PIL import Image
 import numpy as np
 
 
-def ex_5():
-    arquivo = "Grayscale Images/bird.gif"
+def ex_5(arquivo):
     x1=50
-    x2=100
+    x2=200
     y1=50
     y2=200
     img = Image.open(arquivo)
     numpydata = np.asarray(img)  
-    key_random = np.random.randint(255, size=(x2-x1,y2-y1))
+    type_of_imga = "L"
+    if len(numpydata.shape) == 3:
+        key_random = np.random.randint(255, size=(x2-x1,y2-y1,3))
+        type_of_imga = "RGB"
+    else:
+        key_random = np.random.randint(255, size=(x2-x1,y2-y1))
     key_zeros = np.zeros(numpydata.shape,dtype=np.uint8)
 
     key_zeros[x1:x2,y1:y2] = key_random
     codified_region = np.bitwise_xor(numpydata, key_zeros)
 
- 
-
-
-    imgb = Image.fromarray( np.asarray( np.clip(codified_region,0,255), dtype="uint8"), "L" )
+    imgb = Image.fromarray( np.asarray( np.clip(codified_region,0,255), dtype="uint8"), type_of_imga )
     imgb.show()
 
-      #decodified_image = np.bitwise_xor(codified_region, keycle)
+    decodified_image = np.bitwise_xor(codified_region, key_zeros)
+    imgb = Image.fromarray( np.asarray( np.clip(decodified_image,0,255), dtype="uint8"), type_of_imga )
+    imgb.show()
+
+
 
 
 def bsc_str(input: str, p: float) -> str:
@@ -268,7 +273,10 @@ if __name__ == "__main__":
         percentagem_de_ocorrência_de_cada_símbol("ListaPalavrasEN.txt")
     elif opcao == "5":
         print("ex 5")
-        ex_5()
+        arquivo = "Grayscale Images/bird.gif"
+        ex_5(arquivo)
+        arquivo = "Color Images/barries.tif"
+        ex_5(arquivo)
     elif opcao == "6":
         print("ex 6")
         ex_6()
