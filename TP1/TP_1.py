@@ -104,7 +104,13 @@ def pares_de_simblos(arquivo):
     pares = [dados[i:i+2] for i in range(len(dados)-1)]
     frequencia = Counter(pares)
     print(frequencia.most_common(5))
-    return frequencia.most_common(5)
+    
+    print("sem enter")
+    frequencia_sem_n = {par: freq for par, freq in frequencia.items() if '\n' not in par}
+    frequencia_sem_n_ordenada = sorted(frequencia_sem_n.items(), key=lambda x: x[1], reverse=True)
+    mais_comuns = frequencia_sem_n_ordenada[:5]
+    print(mais_comuns)
+    return mais_comuns
 
 
 
@@ -289,6 +295,10 @@ if __name__ == "__main__":
         percentagem_de_ocorrência_de_cada_símbol("ListaPalavrasPT.txt")
         print("top 5 ListaPalavrasEN")
         percentagem_de_ocorrência_de_cada_símbol("ListaPalavrasEN.txt")
+    elif opcao == "3bii":
+        pares_de_simblos("ListaPalavrasPT.txt")
+        pares_de_simblos("ListaPalavrasEN.txt")
+
     elif opcao == "5":
         print("ex 5")
         arquivo = "Grayscale Images/lena.jpg"
