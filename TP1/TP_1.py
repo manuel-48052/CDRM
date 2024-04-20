@@ -37,6 +37,13 @@ def file_read_simbols(arquivo):
         return None
     return dados
 
+def entropy(probabilities):
+    entropy = 0
+    for p in probabilities:
+        if p != 0:
+            entropy += p * math.log2(1/p)
+    return entropy
+
 def analise_de_ficheiro(arquivo):
     dados = file_read_simbols(arquivo)
     if dados == None:
