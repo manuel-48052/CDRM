@@ -4,6 +4,7 @@
 
 void count_bits(int val)
 {
+    int num = val;
     int numsize = sizeof(val);
     numsize = numsize * 8;
     int countof0 = 0;
@@ -25,23 +26,22 @@ void count_bits(int val)
         numsize--;
     }
 
-    printf("Qty of zeros: %d\nQty of ones: %d\n", countof0, countof1);
+    printf("Passed number: %d || Qty of zeros: %d || Qty of ones: %d\n", num, countof0, countof1);
 }
 
 void print_fibonnaci(int n)
 {
-    int a = 0;
-    int b = 1;
-    int c;
+    int a = 1;
+    int b = 0;
+    int c = 0;
 
-    printf("1 ");
     while (n > 0)
     {
+        printf("%d ", c);
         c = a + b;
         a = b;
         b = c;
 
-        printf("%d ", c);
         n--;
     }
 
@@ -120,7 +120,6 @@ void reverse_file(char *input_file_name, char *output_file_name)
         n--;
         int ascii = text[n];
         int abc = putc(ascii, file_out);
-        // printf("%c\n", abc);
     }
 
     fclose(file_in);
@@ -130,20 +129,30 @@ void reverse_file(char *input_file_name, char *output_file_name)
 int main()
 {
     // 1
-    // count_bits(8);
+    // printf("count_bits:\n");
+    // count_bits(10);
+    // count_bits(25);
+    // count_bits(79);
+    // count_bits(99);
 
     // 2
+    // print_fibonnaci(3);
+    // print_fibonnaci(5);
+    // print_fibonnaci(7);
     // print_fibonnaci(10);
 
     // 3
     // char filename[] = "symbol.txt";
-    // int count_symbol = file_symbol_freq(filename, 'a');
-    // printf("%d\n", count_symbol);
+    // char symbol = 'c';
+    // int count_symbol = file_symbol_freq(filename, symbol);
+    // printf("Symbol: %c || Count of symbol: %d\n", symbol, count_symbol);
 
     // 4
     // char filename[] = "symbol.txt";
     // file_histogram(filename);
-    // char filename[] = "symbol.txt";
-    // char filenameb[] = "symbolb.txt";
-    // reverse_file(filename,filenameb);
+
+    // 5
+    char filename[] = "symbol.txt";
+    char filenameb[] = "symbolb.txt";
+    reverse_file(filename, filenameb);
 }

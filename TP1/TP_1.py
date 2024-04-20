@@ -37,6 +37,13 @@ def file_read_simbols(arquivo):
         return None
     return dados
 
+def entropy(probabilities):
+    entropy = 0
+    for p in probabilities:
+        if p != 0:
+            entropy += p * math.log2(1/p)
+    return entropy
+
 def analise_de_ficheiro(arquivo):
     dados = file_read_simbols(arquivo)
     if dados == None:
@@ -279,19 +286,16 @@ if __name__ == "__main__":
         percentagem_de_ocorrência_de_cada_símbol("ListaPalavrasEN.txt")
     elif opcao == "5":
         print("ex 5")
-<<<<<<< HEAD
         #arquivo = "Grayscale Images/bird.gif"
         #ex_5(arquivo)
         #arquivo = "Color Images/barries.tif"
         #ex_5(arquivo)
         arquivo = "Grayscale Images/Lena.jpg"
         ex_5(arquivo)
-=======
         arquivo = "Grayscale Images/lena.jpg"
         ex_5(arquivo)
         arquivo = "Color Images/barries.tif"
         ex_5(arquivo,True)
->>>>>>> e300cdbf953a75f5675aa0d943484d9e4edba531
     elif opcao == "6":
         print("ex 6")
         ex_6()

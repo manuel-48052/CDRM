@@ -1,6 +1,6 @@
-def arithm_prog(a, d, N): 
+def arithm_prog(u, r, N): 
     for i in range(N):
-        term = a + i*d
+        term = u + i*r
         print(term, end=' ')
     return
 
@@ -34,16 +34,6 @@ def prime_in_range(left, right):
     return
 
 def printSymbolsOverThreshold(file, thresholdToPrint):
-    """
-    Prints symbols from a file that appear more than a certain number of times.
-
-    Parameters:
-    file (str): The path to the file to read.
-    thresholdToPrint (int): The minimum number of times a symbol must appear to be printed.
-
-    Returns:
-    None
-    """
     with open(file, 'r') as file:
         data = file.read().replace('\n', '')
         count_dict = {}
