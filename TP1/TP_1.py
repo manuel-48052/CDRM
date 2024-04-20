@@ -37,12 +37,19 @@ def file_read_simbols(arquivo):
         return None
     return dados
 
-def entropy(probabilities):
+def entropy(contagem, total):
     entropy = 0
-    for p in probabilities:
-        if p != 0:
-            entropy += p * math.log2(1/p)
+    for freq in contagem.values():
+        probability = freq / total
+        if probability != 0:
+            entropy += probability * math.log2(1 / probability)
     return entropy
+
+import math
+
+def calculate_own_information(contagem, total):
+    return {k: -math.log2(v / total) for k, v in contagem.items()}
+
 
 def analise_de_ficheiro(arquivo):
     dados = file_read_simbols(arquivo)
@@ -53,13 +60,13 @@ def analise_de_ficheiro(arquivo):
     total = sum(contagem.values())
 
     # Informação própria
-    own_info = {k: -math.log2(v/total) for k, v in contagem.items()}
+    own_info = calculate_own_information(contagem, total)
 
     print("Informação própria:")
     for k, v in own_info.items():
         print(f"{k}: {v:.4f}")
 
-    entropia = -sum(freq/total * math.log2(freq/total) for freq in contagem.values())
+    entropia = entropy(contagem, total)
 
     # Plot do histograma
     contagem = sorted(contagem.items())
