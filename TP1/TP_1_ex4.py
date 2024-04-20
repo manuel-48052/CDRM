@@ -7,6 +7,18 @@ import random
 import math
 
 def generate_symbols(fmp, min, max, print_data=True):
+    """
+    Generate a sequence of symbols based on a frequency mass probability (fmp) map.
+    
+    Args:
+        fmp (dict): A dictionary mapping symbols to their probabilities.
+        min (int): The minimum length of the sequence.
+        max (int): The maximum length of the sequence.
+        print_data (bool): Whether to print the entropy and generated sequence.
+
+    Returns:
+        list: The generated sequence of symbols.
+    """
     symbols = list(fmp.keys())
     probabilities = list(fmp.values())
     sequence = []
@@ -31,6 +43,15 @@ def generate_symbols(fmp, min, max, print_data=True):
     return sequence
 
 def entropy(probabilities):
+    """
+    Calculate the entropy of a list of probabilities.
+    
+    Args:
+        probabilities (list): A list of probabilities.
+
+    Returns:
+        float: The entropy of the probabilities.
+    """
     entropy = 0
     for p in probabilities:
         if p != 0:
@@ -50,6 +71,12 @@ pw_generated_sequence = generate_symbols(fmp_pins, 4,6)
 print()
 
 def generate_n_pins(n):
+    """
+    Generate and print n PINs.
+    
+    Args:
+        n (int): The number of PINs to generate.
+    """
     for _ in range(n):
         pin = generate_symbols(fmp_pins, 4, 6, False)
         print(''.join(pin))
@@ -71,6 +98,12 @@ eurom_stars_generated_sequence = generate_symbols(fmp_eurom_stars, 2, 0)
 print()
 
 def generate_n_euromillions(n):
+    """
+    Generate and print n Euromillions keys.
+    
+    Args:
+        n (int): The number of Euromillions keys to generate.
+    """
     for _ in range(n):
         nums = generate_symbols(fmp_eurom_nums, 5, 0, False)
         stars = generate_symbols(fmp_eurom_stars, 2, 0, False)
@@ -90,6 +123,12 @@ password_dict_generated_sequence = generate_symbols(fmp_password_dict, 8, 12)
 print()
 
 def generate_n_passwords(n):
+    """
+    Generate and print n passwords.
+    
+    Args:
+        n (int): The number of passwords to generate.
+    """
     for _ in range(n):
         password = generate_symbols(fmp_password_dict, 8, 12, False)
         print(''.join(password))
@@ -97,6 +136,13 @@ def generate_n_passwords(n):
 generate_n_passwords(10)
 
 def write_n_passwords_to_file(n, filename):
+    """
+    Generate n passwords and write them to a file.
+    
+    Args:
+        n (int): The number of passwords to generate.
+        filename (str): The name of the file to write to.
+    """
     with open(filename, 'w') as file:
         for _ in range(n):
             password = generate_symbols(fmp_password_dict, 8, 12, False)

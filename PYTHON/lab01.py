@@ -1,4 +1,8 @@
 def arithm_prog(u, r, N): 
+    """
+    This function prints the first 'N' terms of an arithmetic progression.
+    The first term is 'u' and the common difference is 'r'.
+    """
     for i in range(N):
         term = u + i*r
         print(term, end=' ')
@@ -6,6 +10,9 @@ def arithm_prog(u, r, N):
 
 
 def calc_factorial(n): 
+    """
+    This function calculates the factorial of a number 'n' using recursion.
+    """
     if n == 0:
         return 1
     else:
@@ -13,6 +20,9 @@ def calc_factorial(n):
     
 
 def calc_min_common_multiple(a, b):
+    """
+    This function calculates the least common multiple (LCM) of two numbers 'a' and 'b'.
+    """
     if a > b:
         greater = a
     else:
@@ -24,6 +34,9 @@ def calc_min_common_multiple(a, b):
 
 
 def prime_in_range(left, right):
+    """
+    This function prints all prime numbers in the range from 'left' to 'right' (inclusive).
+    """
     for num in range(left, right + 1):
         if num > 1:
             for i in range(2, num):
@@ -34,6 +47,9 @@ def prime_in_range(left, right):
     return
 
 def printSymbolsOverThreshold(file, thresholdToPrint):
+    """
+    This function reads a file, counts the occurrence of each symbol, and prints the symbols that occur more than 'thresholdToPrint' percent of the time.
+    """
     with open(file, 'r') as file:
         data = file.read().replace('\n', '')
         count_dict = {}
