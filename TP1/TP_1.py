@@ -169,33 +169,30 @@ from PIL import Image
 import numpy as np
 
 
-def ex_5(arquivo,total = False):
-    x1=50
-    x2=200
-    y1=50
-    y2=200
+def ex_5(arquivo,x1=50,x2=200,y1=50,y2=200,total = False): 
     img = Image.open(arquivo)
     numpydata = np.asarray(img)  
-    type_of_imga = "L"
+    type_of_imga = "L" #type for Image.fromarray
     if total:
         x1=0
         x2=numpydata.shape[0]
         y1=0
         y2=numpydata.shape[1]
-    if len(numpydata.shape) == 3:
+    if len(numpydata.shape) == 3: # caso imagem em rgb mesmo que em greyscale mas com "3 camadas"
         key_random = np.random.randint(255, size=(x2-x1,y2-y1,3))
         type_of_imga = "RGB"
-        print("RGB")
     else:
         key_random = np.random.randint(255, size=(x2-x1,y2-y1))
-    key_zeros = np.zeros(numpydata.shape,dtype=np.uint8)
 
+    key_zeros = np.zeros(numpydata.shape,dtype=np.uint8)
     key_zeros[x1:x2,y1:y2] = key_random
     codified_region = np.bitwise_xor(numpydata, key_zeros)
 
+    #codifica
     imgb = Image.fromarray( np.asarray( np.clip(codified_region,0,255), dtype="uint8"), type_of_imga )
     imgb.show()
 
+    #descodifica com a mesma chave
     decodified_image = np.bitwise_xor(codified_region, key_zeros)
     imgb = Image.fromarray( np.asarray( np.clip(decodified_image,0,255), dtype="uint8"), type_of_imga )
     imgb.show()
@@ -245,27 +242,42 @@ def ber(seq1, seq2):
 
     for i in range(len(a)):
         diff_bits += a[i] ^ b[i]
-    print("diferent bits")
-    print(diff_bits)
+    #print("diferent bits")
+    #print(diff_bits)
     return diff_bits / len(a)
 
 
-def ex_6():
-    print("ex 6")
-
-   # with open("TestFilesCD/a.txt", 'r') as file: 
-    arquivo = "TestFilesCD/a.txt"
-    dados = file_read_simbols(arquivo)
-    length = len(dados)      
-    #the_key_random = generate_random_key(length)
-    
-    #chave constante
-    
+def ex_6(arquivo):
+    dados = file_read_simbols(arquivo) 
     print(dados)
-    output_bits = bsc(dados, 0.1)
-    print(output_bits)
-    
+    output_bits = bsc(dados, 0.01)
+    print(output_bits)    
     print(f"BER: {ber(dados,output_bits)}")
+
+def ex6_c():
+    # Simulação e comparação de BER
+    # Valores de p para simulação
+    p_values = [0.05, 0.1, 0.2]
+    # Tamanhos de sequência para simulação
+    sequence_lengths = [1024, 10240, 102400, 1024000]
+
+    for p in p_values:
+        print(f"Para p = {p}:")
+        for length in sequence_lengths:
+            real_ber = simulate_transmission(length, p)
+            print(f"  Tamanho da sequência: {length} bits | BER real: {real_ber}")
+def generate_sequence(length):
+    return ''.join(random.choice('01') for _ in range(length))
+
+def simulate_transmission(sequence_length, p):
+    original_sequence = generate_sequence(sequence_length)
+    transmitted_sequence = bsc(original_sequence, p)
+    return ber(original_sequence,transmitted_sequence)
+
+
+
+
+
 
 
 if __name__ == "__main__":
@@ -286,17 +298,12 @@ if __name__ == "__main__":
         percentagem_de_ocorrência_de_cada_símbol("ListaPalavrasEN.txt")
     elif opcao == "5":
         print("ex 5")
-        #arquivo = "Grayscale Images/bird.gif"
-        #ex_5(arquivo)
-        #arquivo = "Color Images/barries.tif"
-        #ex_5(arquivo)
-        arquivo = "Grayscale Images/Lena.jpg"
-        ex_5(arquivo)
         arquivo = "Grayscale Images/lena.jpg"
-        ex_5(arquivo)
+        ex_5(arquivo,x1=50,x2=200,y1=50,y2=200)
         arquivo = "Color Images/barries.tif"
-        ex_5(arquivo,True)
+        ex_5(arquivo,total=True)
     elif opcao == "6":
         print("ex 6")
-        ex_6()
+        #ex_6("TestFilesCD/alice29.txt")
+        ex6_c()
 
