@@ -2,6 +2,15 @@
 #include <stdlib.h>
 #define BUFFER_SIZE 100
 
+/**
+ * Function: count_bits
+ * --------------------
+ * counts the number of 1's and 0's in the binary representation of an integer.
+ *
+ * val: the integer to be analyzed.
+ *
+ * returns: void. The function prints the original number, the count of 0's, and the count of 1's.
+ */
 void count_bits(int val)
 {
     int num = val;
@@ -29,6 +38,15 @@ void count_bits(int val)
     printf("Passed number: %d || Qty of zeros: %d || Qty of ones: %d\n", num, countof0, countof1);
 }
 
+/**
+ * Function: print_fibonnaci
+ * -------------------------
+ * prints the first n numbers in the Fibonacci sequence.
+ *
+ * n: the number of Fibonacci numbers to print.
+ *
+ * returns: void. The function prints the Fibonacci sequence.
+ */
 void print_fibonnaci(int n)
 {
     int a = 1;
@@ -48,6 +66,16 @@ void print_fibonnaci(int n)
     printf("\n");
 }
 
+/**
+ * Function: file_symbol_freq
+ * --------------------------
+ * counts the number of occurrences of a character in a file.
+ *
+ * filename: the name of the file to be analyzed.
+ * symbol: the character to count.
+ *
+ * returns: the count of the symbol. If the symbol is not found, it returns -1.
+ */
 int file_symbol_freq(char *filename, char symbol)
 {
     int count_symbol = 0;
@@ -73,6 +101,15 @@ int file_symbol_freq(char *filename, char symbol)
     }
 }
 
+/**
+ * Function: file_histogram
+ * ------------------------
+ * creates a histogram of ASCII characters in a file.
+ *
+ * filename: the name of the file to be analyzed.
+ *
+ * returns: void. The function prints each ASCII character and its frequency in the file.
+ */
 void file_histogram(char *filename)
 {
     int ascii[256] = {0};
@@ -95,6 +132,16 @@ void file_histogram(char *filename)
     }
 }
 
+/**
+ * Function: reverse_file
+ * ----------------------
+ * reverses the content of a file.
+ *
+ * input_file_name: the name of the file to be reversed.
+ * output_file_name: the name of the file where the reversed content will be written.
+ *
+ * returns: void. The function writes the reversed content to the output file.
+ */
 void reverse_file(char *input_file_name, char *output_file_name)
 {
     int size = 1000;

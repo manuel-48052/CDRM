@@ -16,6 +16,15 @@ import secrets
 import random
 
 def file_read_simbols(arquivo):
+    """
+    Read the contents of a file based on its extension.
+    
+    Args:
+        arquivo (str): The path to the file.
+
+    Returns:
+        str: The contents of the file.
+    """
     if arquivo.endswith('.txt'):
         with open(arquivo, 'r') as f:
             dados = f.read()
@@ -37,14 +46,47 @@ def file_read_simbols(arquivo):
         return None
     return dados
 
-def entropy(probabilities):
+def entropy(contagem, total):
+    """
+    Calculate the entropy of a dataset.
+    
+    Args:
+        contagem (dict): A dictionary mapping symbols to their frequencies.
+        total (int): The total number of symbols.
+
+    Returns:
+        float: The entropy of the dataset.
+    """
     entropy = 0
-    for p in probabilities:
-        if p != 0:
-            entropy += p * math.log2(1/p)
+    for freq in contagem.values():
+        probability = freq / total
+        if probability != 0:
+            entropy += probability * math.log2(1 / probability)
     return entropy
 
+import math
+
+def calculate_own_information(contagem, total):
+    """
+    Calculate the own information of a dataset.
+    
+    Args:
+        contagem (dict): A dictionary mapping symbols to their frequencies.
+        total (int): The total number of symbols.
+
+    Returns:
+        dict: A dictionary mapping symbols to their own information.
+    """
+    return {k: -math.log2(v / total) for k, v in contagem.items()}
+
+
 def analise_de_ficheiro(arquivo):
+    """
+    Analyze a file by calculating its own information and entropy, and plotting a histogram of symbol frequencies.
+    
+    Args:
+        arquivo (str): The path to the file.
+    """
     dados = file_read_simbols(arquivo)
     if dados == None:
         return
@@ -53,13 +95,13 @@ def analise_de_ficheiro(arquivo):
     total = sum(contagem.values())
 
     # Informação própria
-    own_info = {k: -math.log2(v/total) for k, v in contagem.items()}
+    own_info = calculate_own_information(contagem, total)
 
     print("Informação própria:")
     for k, v in own_info.items():
         print(f"{k}: {v:.4f}")
 
-    entropia = -sum(freq/total * math.log2(freq/total) for freq in contagem.values())
+    entropia = entropy(contagem, total)
 
     # Plot do histograma
     contagem = sorted(contagem.items())
@@ -76,6 +118,12 @@ def analise_de_ficheiro(arquivo):
 
 
 def anlise_de_ficheiros(folder_name):
+    """
+    Analyze all files in a folder.
+    
+    Args:
+        folder_name (str): The path to the folder.
+    """
     list_files = os.listdir(folder_name)
     print(list_files)
     for file_name in list_files:
@@ -89,6 +137,12 @@ def anlise_de_ficheiros(folder_name):
 #anlise_de_ficheiros("TestFilesCD")
 
 def percentagem_de_ocorrência_de_cada_símbol(arquivo,top=5):
+    """
+    This function calculates and prints the percentage of occurrence of each symbol in a file.
+    The symbols are sorted in descending order of their percentage of occurrence.
+    The function prints the top 'n' symbols where 'n' is specified by the 'top' parameter.
+    If 'top' is greater than the number of unique symbols, it prints all the symbols.
+    """
     dados = file_read_simbols(arquivo)
 
     contagem = Counter(dados)
@@ -107,6 +161,11 @@ def percentagem_de_ocorrência_de_cada_símbol(arquivo,top=5):
 
 
 def pares_de_simblos(arquivo):
+    """
+    This function reads symbols from a file and groups them into pairs.
+    It then calculates the frequency of each pair and prints the 5 most common pairs.
+    It also prints the 5 most common pairs that do not contain a newline character.
+    """
     dados = file_read_simbols(arquivo)        
     pares = [dados[i:i+2] for i in range(len(dados)-1)]
     frequencia = Counter(pares)
@@ -124,6 +183,10 @@ def pares_de_simblos(arquivo):
 #
 #implementação de fontes de símbolos
 def vernam_cipher(plaintext, key):
+    """
+    This function implements the Vernam cipher.
+    It takes a plaintext and a key as input, and returns the ciphertext.
+    """
     ciphertext = ''
     for i in range(len(plaintext)):
         char = chr(ord(plaintext[i]) ^ ord(key[i]))
@@ -131,6 +194,10 @@ def vernam_cipher(plaintext, key):
     return ciphertext
 
 def vernam_decrypt(ciphertext, key):
+    """
+    This function decrypts a ciphertext encrypted with the Vernam cipher.
+    It takes a ciphertext and a key as input, and returns the decrypted text.
+    """
     decrypted_text = ''
     for i in range(len(ciphertext)):
         char = chr(ord(ciphertext[i]) ^ ord(key[i]))
@@ -138,20 +205,20 @@ def vernam_decrypt(ciphertext, key):
     return decrypted_text
 
 def generate_random_key(length):
+    """
+    This function generates a random key of a specified length.
+    The key consists of alphanumeric characters.
+    """
     return ''.join(secrets.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789') for i in range(length))
 
-# def generate_sequence(N, probabilities):
-#     """
-#     Função que gera uma sequência de N símbolos de acordo com as probabilidades
-#     definidas na FMP.
-#     """
-#     symbols = []
-#     for i in range(N):
-#         symbol = np.random.choice(len(probabilities), p=probabilities)
-#         symbols.append(symbol)
-#     return symbols
 
 def bsc(seq, p):
+    """
+    This function simulates a binary symmetric channel.
+    It takes a sequence of characters and a probability 'p' as input.
+    Each bit in the sequence is flipped with probability 'p'.
+    The function returns the output sequence.
+    """
     output_s = ""
     for leter in seq:
         leter_bin = format(ord(leter), 'b').rjust(8, '0')    
@@ -176,6 +243,11 @@ import numpy as np
 
 
 def ex_5(arquivo,x1=50,x2=200,y1=50,y2=200,total = False): 
+    """
+    This function opens an image file, converts it to a numpy array, and performs bitwise XOR operation on a specified region of the image with a random key.
+    If 'total' is True, the operation is performed on the entire image.
+    The function displays the encoded and decoded images.
+    """
     img = Image.open(arquivo)
     numpydata = np.asarray(img)  
     type_of_imga = "L" #type for Image.fromarray
@@ -207,6 +279,11 @@ def ex_5(arquivo,x1=50,x2=200,y1=50,y2=200,total = False):
 
 
 def bsc_str(input: str, p: float) -> str:
+    """
+    This function simulates a binary symmetric channel on a string of '0's and '1's.
+    Each bit in the string is flipped with probability 'p'.
+    The function returns the output string.
+    """
     transit: list[str] = [c for c in input]
     for i in range(len(transit)):
         if random.random() < p:
@@ -214,6 +291,11 @@ def bsc_str(input: str, p: float) -> str:
     return transit
 
 def bsc_ints(seq, p):
+    """
+    This function simulates a binary symmetric channel on a sequence of integers.
+    Each bit in the binary representation of each integer is flipped with probability 'p'.
+    The function returns the output sequence as a string of characters.
+    """
     output_s = ""
     for leter in seq:
         leter_bin = format(leter, 'b').rjust(8, '0')      
@@ -233,6 +315,10 @@ def bsc_ints(seq, p):
     return output_s
 
 def ber(seq1, seq2):
+    """
+    This function calculates the Bit Error Rate (BER) between two sequences.
+    The sequences are first converted to binary, and then the BER is calculated as the number of differing bits divided by the total number of bits.
+    """
     def tobits(s):
         result = []
         for c in s:
@@ -254,6 +340,9 @@ def ber(seq1, seq2):
 
 
 def ex_6(arquivo):
+    """
+    This function reads symbols from a file, simulates a binary symmetric channel with a bit flip probability of 0.01, and calculates the Bit Error Rate (BER).
+    """
     dados = file_read_simbols(arquivo) 
     print(dados)
     output_bits = bsc(dados, 0.01)
@@ -261,6 +350,10 @@ def ex_6(arquivo):
     print(f"BER: {ber(dados,output_bits)}")
 
 def ex6_c():
+    """
+    This function simulates the transmission of binary sequences of various lengths over a binary symmetric channel with various bit flip probabilities.
+    It prints the real Bit Error Rate (BER) for each combination of sequence length and bit flip probability.
+    """
     # Simulação e comparação de BER
     # Valores de p para simulação
     p_values = [0.05, 0.1, 0.2]
@@ -272,10 +365,18 @@ def ex6_c():
         for length in sequence_lengths:
             real_ber = simulate_transmission(length, p)
             print(f"  Tamanho da sequência: {length} bits | BER real: {real_ber}")
+
 def generate_sequence(length):
+    """
+    This function generates a random binary sequence of a specified length.
+    """
     return ''.join(random.choice('01') for _ in range(length))
 
 def simulate_transmission(sequence_length, p):
+    """
+    This function simulates the transmission of a binary sequence of a specified length over a binary symmetric channel with a specified bit flip probability.
+    It returns the Bit Error Rate (BER) of the transmission.
+    """
     original_sequence = generate_sequence(sequence_length)
     transmitted_sequence = bsc(original_sequence, p)
     return ber(original_sequence,transmitted_sequence)
