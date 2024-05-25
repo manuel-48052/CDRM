@@ -35,7 +35,11 @@ def main():
 
 
     prime = get_prime_random()
-    data = prime.to_bytes(length=1)
+    #TODO
+    check_sum = 0
+
+    prime.append(check_sum)
+    data = prime.to_bytes(length=2, byteorder="big")
     print(prime)
     print(data)
 
@@ -43,6 +47,7 @@ def main():
     with serial.Serial(port, baudrate, timeout=1) as ser:
         time.sleep(2)  # Espera para garantir que a conexão está estável
         ser.write(data)
+
         print(f"Sent prime numbers up to {n} to the PC.")
 
 if __name__ == "__main__":
