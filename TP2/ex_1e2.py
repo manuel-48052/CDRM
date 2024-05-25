@@ -96,8 +96,9 @@ def ber(seq1, seq2):
 
     for i in range(len(a)):
         diff_bits += a[i] ^ b[i]
-    #print("diferent bits")
-    #print(diff_bits)
+        
+    print("diferent bits")
+    print(diff_bits)
     return diff_bits / len(a)
 
 def codify_string_to_bits_3_1(input):    
@@ -128,17 +129,17 @@ def codify_string_to_itns_7_4(input):
             if cont_bit == 4:               
                 cont_bit = 0
                 # p0 = m1 m2 m3
-                if(bits[-3] != bits[-2] != bits[-1]):
+                if(bits[-3] ^ bits[-2] ^ bits[-1]):
                     bits.append(1)
                 else:
                     bits.append(0)
                 # p1 =  m0 m1 m3
-                if(bits[-5] != bits[-4] != bits[-2]):
+                if(bits[-5] ^ bits[-4] ^ bits[-2]):
                     bits.append(1)
                 else:
                     bits.append(0)
                 # p2 = m0 m2 m3
-                if(bits[-6] != bits[-4] != bits[-3]):
+                if(bits[-6] ^ bits[-4] ^ bits[-3]):
                     bits.append(1)
                 else:
                     bits.append(0)
@@ -159,15 +160,18 @@ def decodify_string_to_itns_7_4(input):
         erro1 = 0
         erro0 = 0
         # p0 = m1 m2 m3
-        if((part[1] != part[2] != part[3])!=part[4]):
+        p0 = (part[0] ^ part[2] ^ part[3])
+        p1 = (part[0] ^ part[1] ^ part[3])
+        p2 = (part[1] ^ part[2] ^ part[3])
+        if(p2 != part[4]):
             #print("error erro1")
             erro2 = 1
         # p1 = m0 m1 m3   
-        if((part[0] != part[1] != part[3])!=part[5]):
+        if(p1 != part[5]):
             #print("error erro2")
             erro1 = 1    
         # p2 = m0 m2 m3    
-        if((part[0] != part[2] != part[3]) != part[6]):
+        if(p0 != part[6]):
             #print("error erro3")
             erro0 = 1
         if(erro0 or erro1 or erro2):
@@ -188,11 +192,7 @@ def decodify_string_to_itns_7_4(input):
             #else:                
                 #print("erro em bit de paridade")  
            
-      
         j = 0
-      
-
-
         while j < 4:
             output.append(part[j])
             j += 1
@@ -242,8 +242,8 @@ def ber_lists_ints(seq1, seq2):
 
     for i in range(len(seq1)):
         diff_bits += seq1[i] ^ seq2[i]
-    #print("diferent bits")
-    #print(diff_bits)
+    print("diferent bits")
+    print(diff_bits)
     return diff_bits / len(seq1)
 
 #1 a) i 
@@ -252,26 +252,65 @@ def ber_lists_ints(seq1, seq2):
 #output_bits = bsc(dados, 0.001) 
 #print(f"BER: {ber(dados,output_bits)}")
 
-
+random.seed(1)
+BER = 0.03
 #1 a) ii 
+print("3 1")
 arquivo = "TestFilesCD/alice29.txt"
 dados = file_read_simbols(arquivo)
 rr = codify_string_to_bits_3_1(dados)
-output_bits = bsc_arr_int(rr, 0.001) 
+output_bits = bsc_arr_int(rr, BER) 
 print(f"BER befor correction : {ber_lists_ints(rr,output_bits)}")
 r = decodify_string_to_itns_3_1(output_bits)
 rrr = arr_bit_to_str(r)
-print(f"BER after correction: {ber(dados,rrr)}")
+print(f"BER after correction: {ber(dados,rrr)}")#
 
-#1 a) iii
-#arquivo = "TestFilesCD/a.txt"
+##1 a) iii
+#print("7 4")
+#arquivo = "C:/Users/USER/source/repos/CD_2/CDRM/TP2/TestFilesCD/abbccc.txt"
 #dados = file_read_simbols(arquivo)
 #rr = codify_string_to_itns_7_4(dados)
-#output_bits = bsc_arr_int(rr, 0.001) 
+#output_bits = bsc_arr_int(rr, BER) 
 #print(f"BER befor correction : {ber_lists_ints(rr,output_bits)}")
 #r = decodify_string_to_itns_7_4(output_bits)
 #rrr = arr_bit_to_str(r)
 #print(f"BER after correction: {ber(dados,rrr)}")
 
 
+#2 
+def burst_arr_int(seq, p, L):
+    """
+    This function simulates a burst error model.
+    It takes a sequence of bits, a probability 'p' for starting a burst,
+    and a burst length 'L'. When a burst starts, it flips 'L' consecutive bits.
+    The function returns the output sequence.
+    """
+    output = []
+    i = 0
+
+    while i < len(seq):
+        if random.random() < p:
+            # Introduce a burst error of length L
+            burst_length = min(L, len(seq) - i)  # Ensure we don't go out of bounds
+            for j in range(burst_length):
+                output.append(0 if seq[i] else 1)
+                i += 1
+        else:
+            output.append(seq[i])
+            i += 1
+
+    return output
+random.seed(1)
+BER = 0.03
+#2
+print("3 1")
+arquivo = "TestFilesCD/alice29.txt"
+dados = file_read_simbols(arquivo)
+rr = codify_string_to_bits_3_1(dados)
+#output_bits = bsc_arr_int(rr, BER) 
+output_bits = burst_arr_int(rr, BER,2) 
+print(f"BER befor correction : {ber_lists_ints(rr,output_bits)}")
+r = decodify_string_to_itns_3_1(output_bits)
+rrr = arr_bit_to_str(r)
+print(f"BER after correction: {ber(dados,rrr)}")#
 
