@@ -239,11 +239,12 @@ def ber_lists_ints(seq1, seq2):
     The sequences are first converted to binary, and then the BER is calculated as the number of differing bits divided by the total number of bits.
     """
     diff_bits = 0
-
+    print(seq1)
     for i in range(len(seq1)):
         diff_bits += seq1[i] ^ seq2[i]
     print("diferent bits")
     print(diff_bits)
+    
     return diff_bits / len(seq1)
 
 #1 a) i 
@@ -255,15 +256,15 @@ def ber_lists_ints(seq1, seq2):
 random.seed(1)
 BER = 0.03
 #1 a) ii 
-print("3 1")
-arquivo = "TestFilesCD/alice29.txt"
-dados = file_read_simbols(arquivo)
-rr = codify_string_to_bits_3_1(dados)
-output_bits = bsc_arr_int(rr, BER) 
-print(f"BER befor correction : {ber_lists_ints(rr,output_bits)}")
-r = decodify_string_to_itns_3_1(output_bits)
-rrr = arr_bit_to_str(r)
-print(f"BER after correction: {ber(dados,rrr)}")#
+#print("3 1")
+#arquivo = "TestFilesCD/alice29.txt"
+#dados = file_read_simbols(arquivo)
+#rr = codify_string_to_bits_3_1(dados)
+#output_bits = bsc_arr_int(rr, BER) 
+#print(f"BER befor correction : {ber_lists_ints(rr,output_bits)}")
+#r = decodify_string_to_itns_3_1(output_bits)
+#rrr = arr_bit_to_str(r)
+#print(f"BER after correction: {ber(dados,rrr)}")
 
 ##1 a) iii
 #print("7 4")
@@ -277,7 +278,7 @@ print(f"BER after correction: {ber(dados,rrr)}")#
 #print(f"BER after correction: {ber(dados,rrr)}")
 
 
-#2 
+#2   ------------------------------------------------------------------------------------- ex 2 --------------------------
 def burst_arr_int(seq, p, L):
     """
     This function simulates a burst error model.
@@ -300,17 +301,109 @@ def burst_arr_int(seq, p, L):
             i += 1
 
     return output
+
+def burst_bits(seq, p, L):
+    """
+    This function simulates a burst error model.
+    It takes a sequence of bits, a probability 'p' for starting a burst,
+    and a burst length 'L'. When a burst starts, it flips 'L' consecutive bits.
+    The function returns the output sequence.
+    """
+    output = ""
+    i = 0
+
+    while i < len(seq):
+        if random.random() < p:
+            # Introduce a burst error of length L
+            burst_length = min(L, len(seq) - i)  # Ensure we don't go out of bounds
+            for j in range(burst_length):
+                output += '0' if seq[i] =='1' else '1'
+                i += 1
+        else:
+            output += seq[i]
+            i += 1
+
+    return output
+
+ 
+def calculate_crc_bits(bit_list, polynomial=0x04C11DB7, crc_length=32):
+    # Initialize the CRC register
+    crc = 0xFFFFFFFF    
+    # Process each bit in the bit list
+    for bit in bit_list:
+        # XOR the top bit with the input bit
+        crc ^= int(bit) << (crc_length - 1)
+        
+        # Perform the polynomial division
+        for _ in range(crc_length):
+            if crc & (1 << (crc_length - 1)):
+                crc = (crc << 1) ^ polynomial
+            else:
+                crc <<= 1
+            # Mask to maintain crc_length bits
+            crc &= (1 << crc_length) - 1
+    
+    # Return the final CRC value
+    return crc
+
+def ber_bits(seq1, seq2):
+    diff_bits = 0
+    for i in range(len(seq1)):
+        if seq1[i] != seq2[i]:
+            diff_bits += 1
+    print("diferent bits")
+    print(diff_bits)
+    
+    return diff_bits / len(seq1)
+
 random.seed(1)
-BER = 0.03
+BER = 0.2
+
 #2
-print("3 1")
-arquivo = "TestFilesCD/alice29.txt"
+
+arquivo = "TestFilesCD/a.txt"
 dados = file_read_simbols(arquivo)
-rr = codify_string_to_bits_3_1(dados)
-#output_bits = bsc_arr_int(rr, BER) 
-output_bits = burst_arr_int(rr, BER,2) 
-print(f"BER befor correction : {ber_lists_ints(rr,output_bits)}")
-r = decodify_string_to_itns_3_1(output_bits)
-rrr = arr_bit_to_str(r)
-print(f"BER after correction: {ber(dados,rrr)}")#
+
+polynomial=0x04C11DB7 
+crc_length=32
+SIZE_OF_CHUNK = 1024
+data = (''.join(format(ord(x), 'b') for x in dados))
+i = 0
+bits_wt_crc = ""
+
+while i < len(data):  
+    chunk = data[i:i+SIZE_OF_CHUNK]   
+    if i > 2:
+        print(chunk)
+    crc = calculate_crc_bits(chunk, polynomial, crc_length)
+    padded_binary_crc = format(crc, 'b').zfill(crc_length)
+    crc = (''.join(padded_binary_crc))  
+    bits_wt_crc += chunk+crc
+    i += SIZE_OF_CHUNK
+
+
+
+
+
+output_bits = burst_bits(bits_wt_crc, BER,1) 
+print(f"BER befor correction : {ber_bits(bits_wt_crc,output_bits)}")
+
+i = 0
+n = 0
+while i < len(output_bits):  
+    chunk = output_bits[i:i+SIZE_OF_CHUNK+32]
+    given_crc = chunk[-32:]     
+    crc = calculate_crc_bits(chunk[0:-32], polynomial, crc_length)
+    padded_binary_crc = format(crc, 'b').zfill(32)
+    crc = (''.join(padded_binary_crc))  
+    if crc != given_crc:
+        print(f"error detected on chunk {n}")
+    i += (SIZE_OF_CHUNK+32)
+    n += 1
+
+
+
+
+#rrr = arr_bit_to_str(r)
+#print(f"BER after correction: {ber(dados,rrr)}")#
 
