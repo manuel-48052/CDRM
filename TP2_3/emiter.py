@@ -28,7 +28,7 @@ def get_primes(n):
 def main():
     port = '/dev/ttyS0'  # Porta serial do Raspberry Pi
     baudrate = 9600
-
+    checksum = False
 
     primes = get_primes(15)
     
@@ -38,8 +38,9 @@ def main():
         time.sleep(2)  # Espera para garantir que a conexão está estável
         for prime in primes:
             data = prime.to_bytes(length=2, byteorder="big")
-            check_sum = checksum(data).to_bytes(length=2, byteorder="big")
-            data  += check_sum
+            if checksum:               
+                check_sum = checksum(data).to_bytes(length=2, byteorder="big")
+                data  += check_sum
             ser.write(data)
                     
         ser.write(END_OF_TEXT)

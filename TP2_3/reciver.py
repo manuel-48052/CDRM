@@ -47,9 +47,10 @@ def main():
             checksum = recived[i+2:i+3]
             print(f"recived {data}  with checksum {checksum}")
             print(f"checksum verification is {verify_checksum(data,checksum)}") 
-
-
-        
+    else:
+        for i in range(0,len(recived),2):
+            data = recived[i:i+1]
+            print(f"recived {data}")
 
 
 if __name__ == "__main__":
