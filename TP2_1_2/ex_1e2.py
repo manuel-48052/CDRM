@@ -391,14 +391,14 @@ print(f"BER befor correction : {ber_bits(bits_wt_crc,output_bits)}")
 i = 0
 n = 0
 while i < len(output_bits):  
-    chunk = output_bits[i:i+SIZE_OF_CHUNK+32]
-    given_crc = chunk[-32:]     
-    crc = calculate_crc_bits(chunk[0:-32], polynomial, crc_length)
-    padded_binary_crc = format(crc, 'b').zfill(32)
+    chunk = output_bits[i:i+SIZE_OF_CHUNK+crc_length]
+    given_crc = chunk[-crc_length:]     
+    crc = calculate_crc_bits(chunk[0:-crc_length], polynomial, crc_length)
+    padded_binary_crc = format(crc, 'b').zfill(crc_length)
     crc = (''.join(padded_binary_crc))  
     if crc != given_crc:
         print(f"error detected on chunk {n}")
-    i += (SIZE_OF_CHUNK+32)
+    i += (SIZE_OF_CHUNK+crc_length)
     n += 1
 
 
