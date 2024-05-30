@@ -1,7 +1,7 @@
 import serial
 import random
 import time
-from my_checksum import checksum
+from my_checksum import calculate_ipchecksum
 
 MAX_NUMBER_FOR_WORD = 65535
 END_OF_TEXT: bytes = chr(3).encode()
@@ -26,26 +26,30 @@ def get_primes(n):
 
 
 def main():
-    port = '/dev/ttyS0'  # Porta serial do Raspberry Pi
+    port = '/dev/serial0'  # Porta serial do Raspberry Pi
     baudrate = 9600
-    checksum = False
-
-    primes = get_primes(15)
-    
-
-    
+    checksumbb = True
+   
     with serial.Serial(port, baudrate, timeout=1) as ser:
+        data = get_primes(3)
         time.sleep(2)  # Espera para garantir que a conexão está estável
-        for prime in primes:
-            data = prime.to_bytes(length=2, byteorder="big")
-            if checksum:               
-                check_sum = checksum(data).to_bytes(length=2, byteorder="big")
-                data  += check_sum
-            ser.write(data)
-                    
+    
+        if checksumbb:
+            check_sum = calculate_ipchecksum(data)
+            #alter data here to simulate error
+            #data[0] = 22 #example to simulate error
+            data.append(check_sum)
+        print(data)
+        for number in data:
+            number = int.to_bytes(number,length=2, byteorder="big")
+            print(number)
+            ser.write(number)
+
+
+        time.sleep(1)
         ser.write(END_OF_TEXT)
 
-        print(f"Sent prime numbers up to {n} to the PC.")
+    print(f"Sent prime numbers up to {primes} to the PC.")
 
 if __name__ == "__main__":
     main()
