@@ -21,13 +21,13 @@ def receive_loop(port: str,baudrate:int) -> bytes:
 
 def main():
     check_sum = True
-    port = 'COM5'  # Porta serial no PC (verifique qual é a correta)
+    port = 'COM3'  # Porta serial no PC (verifique qual é a correta)
     baudrate = 9600
     data = []
     recived = receive_loop(port,baudrate)
     if check_sum:
         for i in range(0,len(recived)-2,2): 
-            data.apend(int.from_bytes(recived[i:i+2],byteorder="big"))                     
+            data.append(int.from_bytes(recived[i:i+2],byteorder="big"))                     
              
         received_checksum = int.from_bytes(recived[-2:],byteorder="big")
         new_checksum = calculate_ipchecksum(data)
@@ -37,7 +37,7 @@ def main():
         print(f"validation is {validation}")
     else:
         for i in range(0,len(recived),2):
-            data.apend(int.from_bytes(recived[i:i+2],byteorder="big"))
+            data.append(int.from_bytes(recived[i:i+2],byteorder="big"))
         print(f"recived {data}")
 
 

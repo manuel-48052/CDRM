@@ -48,8 +48,8 @@ def main():
 
         time.sleep(1)
         ser.write(END_OF_TEXT)
+        print(f"Sent prime numbers up to {data} to the PC.")
 
-    print(f"Sent prime numbers up to {primes} to the PC.")
 
 if __name__ == "__main__":
     main()
